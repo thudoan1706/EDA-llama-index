@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "eda-llama-index"
+version = "0.1.0"
+description = ""
+authors = ["thudoan1706 <thudoan1706@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+llama-index-llms-ollama = "^0.2.2"
+llama-index = "^0.10.65"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
