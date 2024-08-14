@@ -1,0 +1,53 @@
+{
+    "$defs": {
+        "Car": {
+            "properties": {
+                "brand": {
+                    "title": "Brand",
+                    "type": "string"
+                },
+                "model": {
+                    "title": "Model",
+                    "type": "string"
+                },
+                "power": {
+                    "title": "Power",
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "brand",
+                "model",
+                "power"
+            ],
+            "title": "Car",
+            "type": "object"
+        }
+    },
+    "properties": {
+        "cars": {
+            "items": {
+                "$ref": "#/$defs/Car"
+            },
+            "title": "Cars",
+            "type": "array"
+        }
+    },
+    "required": [
+        "cars"
+    ],
+    "title": "CarCollection",
+    "type": "object",
+    "cars": [
+        {
+            "brand": "Fiat",
+            "model": "Panda",
+            "power": 45
+        },
+        {
+            "brand": "Honda",
+            "model": "Civic",
+            "power": null
+        }
+    ]
+}
