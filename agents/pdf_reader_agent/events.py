@@ -1,7 +1,5 @@
 from typing import Optional
-from llama_index.core.workflow import (
-    Event
-)
+from llama_index.core.workflow import Event
 
 class InitializeEvent(Event):
     pass
@@ -11,5 +9,9 @@ class ConciergeEvent(Event):
     just_completed: Optional[str]
     need_help: Optional[bool]
 
+class OrchestratorEvent(Event):
+    request: Optional[str] = None
+
 class PDFIngestionEvent(Event):
-    dirname: str
+    request: Optional[str]
+
