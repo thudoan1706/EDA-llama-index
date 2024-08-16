@@ -1,6 +1,7 @@
 from typing import Optional
 from llama_index.core.workflow import Event
 
+# events.py
 class InitializeEvent(Event):
     pass
 
@@ -14,4 +15,9 @@ class OrchestratorEvent(Event):
 
 class PDFIngestionEvent(Event):
     request: Optional[str]
+    
+class QueryEvent(Event):
+    query: str
 
+class QueryResultEvent(Event):
+    result: str
