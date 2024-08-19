@@ -1,4 +1,4 @@
-from orchestrator.ingestion.vector_store.pinecone.client import PineconeClient
+from .orchestrator.ingestion.vector_store.pinecone.client import PineconeClient
 from llama_index.core.workflow import (
     Context,
     Workflow,
@@ -7,14 +7,15 @@ from llama_index.core.workflow import (
     Event,
     step,
 )
-import asyncio
-from orchestrator.ingestion.utils.pdf_processor import process_pdfs_in_directory
-from events import InitializeEvent, PDFIngestionEvent, ConciergeEvent, OrchestratorEvent, QueryEvent, QueryResultEvent
-from orchestrator.ingestion.vector_store.pinecone.client import PineconeClient
-
-
+from .orchestrator.utils.pdf_processor import process_pdfs_in_directory
+from .events import InitializeEvent, PDFIngestionEvent, ConciergeEvent, OrchestratorEvent, QueryEvent, QueryResultEvent
+from .orchestrator.ingestion.vector_store.pinecone.client import PineconeClient
 from llama_index.core.workflow import Context, StartEvent, StopEvent
-
+import time
+from llama_index.core import get_response_synthesizer
+from .orchestrator.rag.query_engine import QueryEngine
+import os
+os.environ["OPENAI_API_KEY"] = ""
 class WorkflowSteps:
     
     @step(pass_context=True)
@@ -23,7 +24,7 @@ class WorkflowSteps:
             dirname = ev.get("dirname")
             if dirname is not None:
                 ctx.data["dirname"] = dirname
-                return OrchestratorEvent(request="ingest")  # Trigger the OrchestratorEvent for ingestion
+                return OrchestratorEvent(request="ingest")
 
             return InitializeEvent()
 
@@ -40,16 +41,14 @@ class WorkflowSteps:
         if ev.request == "ingest":
             return PDFIngestionEvent(request="start_pdf_ingestion")
         
+        
         elif ev.request == "query":
-            return QueryEvent(query="how does Environmental difficulties at present are also challenging the sustainability?")
+        
+            user_input = input("Ask any questions you have regarding diet: ")
+            # self.send_event(QueryEvent(query=user_input))
+            return QueryEvent(query=user_input)
         
         return StopEvent(result={"message": "Orchestrator did not recognize the event"})
-
-    @step(pass_context=True)
-    async def query_index(self, ctx: Context, ev: QueryEvent) -> StopEvent:
-        query_engine = ctx.data["index"].as_query_engine()
-        response = query_engine.query(ev.query)
-        return StopEvent(result={"query_result": str(response)})
 
     @step(pass_context=True)
     async def ingest(self, ctx: Context, ev: PDFIngestionEvent) -> InitializeEvent:
@@ -59,5 +58,20 @@ class WorkflowSteps:
 
             client = PineconeClient(collection_name="pdf-docs")
             client.upsert_indices(nodes)
+            time.sleep(3)
             ctx.data["dirname"] = None
         return InitializeEvent()
+    
+    
+    @step(pass_context=True)
+    async def query_index(self, ctx: Context, ev: QueryEvent) -> StopEvent:
+        retriever = ctx.data["index"].as_retriever()
+        synthesizer = get_response_synthesizer(response_mode="compact")
+        query_engine = QueryEngine(
+            retriever=retriever, response_synthesizer=synthesizer
+        )
+        response = query_engine.query(ev.query)
+        print("len source nodes", len(response.source_nodes))
+        print(response.source_nodes[0].get_content())
+
+        return StopEvent(result={"query_result": str(response), "source_node": response.source_nodes[0].get_content()})

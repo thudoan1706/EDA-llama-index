@@ -1,4 +1,4 @@
-from orchestrator.ingestion.vector_store.pinecone.client import PineconeClient
+from .orchestrator.ingestion.vector_store.pinecone.client import PineconeClient
 from llama_index.core.workflow import (
     Context,
     Workflow,
@@ -7,15 +7,12 @@ from llama_index.core.workflow import (
     Event,
     step,
 )
-import asyncio
-from orchestrator.ingestion.utils.pdf_processor import process_pdfs_in_directory
-from events import InitializeEvent, PDFIngestionEvent, ConciergeEvent, OrchestratorEvent, QueryEvent, QueryResultEvent
-from orchestrator.ingestion.vector_store.pinecone.client import PineconeClient
+from .events import InitializeEvent, PDFIngestionEvent, ConciergeEvent, OrchestratorEvent, QueryEvent, QueryResultEvent
 
 
 # workflow.py
 from llama_index.core.workflow import Context, StartEvent, Workflow
-from steps import WorkflowSteps
+from .steps import WorkflowSteps
 
 class ConciergeWorkflow(Workflow):
     
@@ -40,24 +37,3 @@ class ConciergeWorkflow(Workflow):
     @step(pass_context=True)
     async def query_index(self, ctx: Context, ev: QueryEvent) -> StopEvent:
         return await self.steps.query_index(ctx, ev)
-
-
-
-
-async def main():
-    concierge = ConciergeWorkflow(timeout=180, verbose=True)
-    result = await concierge.run()
-    # query_engine = result["index"].index.as_query_engine()
-    # response = query_engine.query("how does Environmental difficulties at present are also challenging the sustainability of the Mediterranean way of living")
-    # from llama_index.utils.workflow import (
-    #     draw_all_possible_flows,
-    #     draw_most_recent_execution,
-    # )
-    # draw_all_possible_flows(ConciergeWorkflow, filename="./diagrams/workflow_all.html")
-    # draw_most_recent_execution(concierge, filename="./diagrams/workflow_recent.html")
-    
-    print("Workflow Final Result:", result["query_result"])
-
-# Execute the main function using asyncio
-if __name__ == "__main__":
-    asyncio.run(main())
