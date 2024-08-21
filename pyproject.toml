@@ -15,6 +15,11 @@ llama-index-utils-workflow = "^0.1.1"
 pdfplumber = "^0.11.3"
 llama-index-vector-stores-pinecone = "^0.1.9"
 autopep8 = "^2.3.1"
+llama-index-embeddings-openai = "^0.1.11"
+llama-index-packs-agents-coa = "^0.1.0"
+matplotlib = "^3.9.2"
+networkx = "^3.3"
+llama-index-postprocessor-cohere-rerank = "^0.1.7"
 
 
 [tool.poetry.group.dev.dependencies]
