@@ -10,7 +10,7 @@ operation_mapper = {
 
 
 def create_expression(num1:int, num2: int, operation_namespace: str):
-    return f"{num1} {operation_mapper[operation_namespace]} {num2}"
+    return f"{str(num1)} {operation_mapper[operation_namespace]} {str(num2)}"
     
 
 class ArithmeticValidatorToolSpec(BaseToolSpec):
@@ -40,7 +40,6 @@ class ArithmeticValidatorToolSpec(BaseToolSpec):
         """
         
         expression = create_expression(num1, num2, operation_namespace)
-        
         
         num = 0
         op = "+"
