@@ -12,4 +12,5 @@ class QueryEngine(CustomQueryEngine):
     def custom_query(self, query_str: str):
         nodes = self.retriever.retrieve(query_str)
         response_obj = self.response_synthesizer.synthesize(query_str, nodes)
+    
         return response_obj

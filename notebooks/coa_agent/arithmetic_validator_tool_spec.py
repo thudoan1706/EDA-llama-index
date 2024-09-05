@@ -17,7 +17,7 @@ class ArithmeticValidatorToolSpec(BaseToolSpec):
     """ Tool to eval the result of Calculator tool"""
     spec_functions = ["eval_expression"]
     
-    def eval_expression(self, num1: int, num2: int, operation_namespace: str ) -> int:
+    def eval_expression(self, num1: int, num2: int, operation_namespace: str, tool_output: str) -> int:
         """
         Evaluate the given arithmetic expression and return the result.
 
@@ -40,7 +40,7 @@ class ArithmeticValidatorToolSpec(BaseToolSpec):
         """
         
         expression = create_expression(num1, num2, operation_namespace)
-        
+
         num = 0
         op = "+"
         stack = []
@@ -76,4 +76,4 @@ class ArithmeticValidatorToolSpec(BaseToolSpec):
                 op = char
         helper(op, num)
 
-        return sum(stack)
+        return sum(stack) != int(tool_output)

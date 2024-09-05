@@ -7,7 +7,7 @@ class InitializeEvent(Event):
 
 class ConciergeEvent(Event):
     request: Optional[str]
-    just_completed: Optional[str]
+    just_completed: Optional[bool]
     need_help: Optional[bool]
 
 class OrchestratorEvent(Event):

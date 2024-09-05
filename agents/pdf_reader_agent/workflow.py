@@ -23,7 +23,7 @@ class ConciergeWorkflow(Workflow):
         return await self.steps.concierge(ctx, ev)
 
     @step(pass_context=True)
-    async def initialize(self, ctx: Context, ev: InitializeEvent) -> OrchestratorEvent:
+    async def initialize(self, ctx: Context, ev: InitializeEvent) -> ConciergeEvent:
         return await self.steps.initialize(ctx, ev)
 
     @step(pass_context=True)

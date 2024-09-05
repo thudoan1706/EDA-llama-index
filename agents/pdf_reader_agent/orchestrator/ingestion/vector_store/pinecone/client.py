@@ -9,7 +9,6 @@ from typing import Optional, Any
 from llama_index.core.schema import TextNode
 from llama_index.embeddings.openai import OpenAIEmbedding
 
-# Initialize Pinecone API key and client
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY", "")
 PINECONE_CLIENT = Pinecone(PINECONE_API_KEY)
 
